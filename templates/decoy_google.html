@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google – Sign In</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="decoy-page decoy-google-page">
+
+    <header class="decoy-google-header">
+        <a href="#" class="decoy-google-logo" onclick="track('logo')">
+            <span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span class="g6">e</span>
+        </a>
+        <div class="decoy-google-search-wrap">
+            <div class="decoy-google-search-bar">
+                <input type="text" value="" placeholder="Search or type a URL" readonly>
+                <span class="search-icon">&#128269;</span>
+                <span class="mic-icon">&#127908;</span>
+            </div>
+        </div>
+        <div class="decoy-google-right">
+            <a href="#" class="decoy-google-apps" onclick="track('apps'); return false;">&#9776;</a>
+            <div class="decoy-google-profile" onclick="track('profile')" role="button" tabindex="0"></div>
+        </div>
+    </header>
+
+    <nav class="decoy-google-nav">
+        <a href="#" class="active">All</a>
+        <a href="#">News</a>
+        <a href="#">Videos</a>
+        <a href="#">Images</a>
+    </nav>
+
+    <div class="decoy-google-signin-card">
+        <h1>Sign in</h1>
+        <p class="subtitle">Use your Google Account</p>
+        <form id="f" onsubmit="return false;">
+            <div class="form-group">
+                <label for="user">Email or phone</label>
+                <input type="text" id="user" placeholder="Enter your email" autocomplete="off">
+            </div>
+            <div class="form-group" style="display:none;" id="pwGroup">
+                <label for="pass">Enter your password</label>
+                <input type="password" id="pass" placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn-next" id="btn">Next</button>
+            <p class="error-msg" id="err"></p>
+        </form>
+        <a href="#" class="link-create" onclick="track('create')">Create account</a>
+    </div>
+
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','google decoy');
+        document.getElementById('f').onsubmit=function(){
+            var pwGroup=document.getElementById('pwGroup');
+            if(pwGroup.style.display!='block'){
+                if(document.getElementById('user').value){ pwGroup.style.display='block'; document.getElementById('btn').textContent='Sign in'; }
+                return;
+            }
+            var u=document.getElementById('user').value;
+            document.getElementById('btn').textContent='Authenticating...';
+            document.getElementById('btn').disabled=true;
+            track('login_attempt',u);
+            setTimeout(function(){
+                document.getElementById('err').style.display='block';
+                document.getElementById('err').textContent='Wrong password. Try again.';
+                document.getElementById('btn').textContent='Sign in';
+                document.getElementById('btn').disabled=false;
+            }, 1800);
+        };
+    </script>
+</body>
+</html>

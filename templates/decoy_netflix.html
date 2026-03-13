@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix – Sign In</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-nfx { font-family: Arial, sans-serif; background: #141414; min-height: 100vh; margin: 0; color: #fff; }
+        .decoy-nfx-header { padding: 1rem 2rem; display: flex; align-items: center; }
+        .decoy-nfx-logo { color: #e50914; font-size: 1.75rem; font-weight: bold; text-decoration: none; }
+        .decoy-nfx-hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"800\" height=\"450\"><rect fill=\"%23333\" width=\"800\" height=\"450\"/></svg>'); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .decoy-nfx-card { background: rgba(0,0,0,0.8); padding: 3rem; border-radius: 4px; max-width: 400px; width: 100%; }
+        .decoy-nfx-card h1 { font-size: 2rem; margin-bottom: 1.5rem; font-weight: 400; }
+        .decoy-nfx-card input { width: 100%; padding: 0.75rem 1rem; margin-bottom: 1rem; background: #333; border: none; border-radius: 4px; color: #fff; box-sizing: border-box; }
+        .decoy-nfx-card .btn { width: 100%; padding: 0.75rem; background: #e50914; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        .decoy-nfx-card .btn:hover { background: #f40612; }
+        .decoy-nfx-card .help { font-size: 0.875rem; color: #b3b3b3; margin-top: 1rem; }
+    </style>
+</head>
+<body class="decoy-nfx">
+    <header class="decoy-nfx-header">
+        <a href="#" class="decoy-nfx-logo" onclick="track('logo')">NETFLIX</a>
+    </header>
+    <div class="decoy-nfx-hero">
+        <div class="decoy-nfx-card">
+            <h1>Sign In</h1>
+            <form id="f" onsubmit="return false;">
+                <input type="text" placeholder="Email or phone number" id="user" autocomplete="off">
+                <input type="password" placeholder="Password" id="pass">
+                <button type="submit" class="btn" id="btn">Sign In</button>
+            </form>
+            <p class="help">New to Netflix? <a href="#" style="color:#fff;" onclick="track('signup')">Sign up now</a>.</p>
+            <p id="err" style="display:none; color:#e87c03; font-size:0.875rem;"></p>
+        </div>
+    </div>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','netflix decoy');
+        document.getElementById('f').onsubmit=function(){ var u=document.getElementById('user').value; document.getElementById('btn').textContent='Signing in...'; document.getElementById('btn').disabled=true; track('login_attempt',u); setTimeout(function(){ document.getElementById('err').style.display='block'; document.getElementById('err').textContent='Incorrect password. Please try again.'; document.getElementById('btn').textContent='Sign In'; document.getElementById('btn').disabled=false; }, 1800); };
+    </script>
+</body>
+</html>

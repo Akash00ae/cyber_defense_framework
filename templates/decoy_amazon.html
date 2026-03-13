@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Sign In</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-amz { font-family: Arial, sans-serif; background: #fff; min-height: 100vh; margin: 0; color: #111; }
+        .decoy-amz-header { background: #131921; color: #fff; padding: 0.6rem 1rem; display: flex; align-items: center; gap: 1rem; }
+        .decoy-amz-logo { color: #fff; font-size: 1.5rem; font-weight: bold; text-decoration: none; }
+        .decoy-amz-search { flex: 1; max-width: 500px; display: flex; margin: 0 1rem; }
+        .decoy-amz-search input { flex: 1; padding: 0.5rem 0.75rem; border: none; font-size: 0.9rem; }
+        .decoy-amz-search button { background: #febd69; border: none; padding: 0.5rem 1rem; cursor: pointer; }
+        .decoy-amz-nav { background: #232f3e; color: #fff; padding: 0.4rem 1rem; font-size: 0.875rem; }
+        .decoy-amz-main { max-width: 400px; margin: 2rem auto; padding: 2rem; border: 1px solid #ddd; border-radius: 4px; }
+        .decoy-amz-main h1 { font-size: 1.75rem; font-weight: 400; margin-bottom: 1rem; }
+        .decoy-amz-main input { width: 100%; padding: 0.5rem; margin-bottom: 0.75rem; border: 1px solid #a0a0a0; border-radius: 3px; box-sizing: border-box; }
+        .decoy-amz-main .btn { width: 100%; padding: 0.5rem; background: linear-gradient(to bottom, #f7dfa5, #f0c14b); border: 1px solid #a88734; border-radius: 3px; cursor: pointer; font-size: 0.9rem; }
+        .decoy-amz-main .btn:hover { background: linear-gradient(to bottom, #f5d78e, #edb931); }
+        .decoy-amz-main .link { color: #0066c0; font-size: 0.875rem; }
+    </style>
+</head>
+<body class="decoy-amz">
+    <header class="decoy-amz-header">
+        <a href="#" class="decoy-amz-logo" onclick="track('logo')">amazon</a>
+        <div class="decoy-amz-search">
+            <input type="text" placeholder="Search Amazon" readonly>
+            <button type="button">Search</button>
+        </div>
+        <span onclick="track('cart')">Cart</span>
+    </header>
+    <nav class="decoy-amz-nav">All &#9660; Today's Deals | Customer Service | Registry | Gift Cards | Sell</nav>
+    <main class="decoy-amz-main">
+        <h1>Sign in</h1>
+        <form id="f" onsubmit="return false;">
+            <label>Email or mobile number</label>
+            <input type="text" id="user" autocomplete="off">
+            <label>Password</label>
+            <input type="password" id="pass">
+            <button type="submit" class="btn" id="btn">Sign in</button>
+        </form>
+        <a href="#" class="link" onclick="track('forgot')">Forgot your password?</a>
+        <p style="font-size:0.75rem; margin-top:1rem;">New to Amazon? <a href="#" class="link" onclick="track('create')">Create your account</a></p>
+        <p id="err" style="display:none; color:#c40000; font-size:0.875rem;"></p>
+    </main>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','amazon decoy');
+        document.getElementById('f').onsubmit=function(){ var u=document.getElementById('user').value; document.getElementById('btn').textContent='Signing in...'; document.getElementById('btn').disabled=true; track('login_attempt',u); setTimeout(function(){ document.getElementById('err').style.display='block'; document.getElementById('err').textContent='Wrong password. Try again.'; document.getElementById('btn').textContent='Sign in'; document.getElementById('btn').disabled=false; }, 1800); };
+    </script>
+</body>
+</html>

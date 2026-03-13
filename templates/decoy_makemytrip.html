@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MakeMyTrip – Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-mmt { font-family: Arial, sans-serif; background: #f5f5f5; min-height: 100vh; margin: 0; color: #333; }
+        .decoy-mmt-header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 1.5rem; }
+        .decoy-mmt-logo { color: #ff6b00; font-size: 1.4rem; font-weight: bold; text-decoration: none; }
+        .decoy-mmt-nav a { color: #333; text-decoration: none; margin-right: 1rem; font-size: 0.9rem; }
+        .decoy-mmt-main { max-width: 420px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .decoy-mmt-main h1 { font-size: 1.5rem; color: #333; margin-bottom: 1rem; }
+        .decoy-mmt-main input { width: 100%; padding: 0.65rem; margin-bottom: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .decoy-mmt-main .btn { width: 100%; padding: 0.65rem; background: #ff6b00; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        .decoy-mmt-main .btn:hover { background: #e65f00; }
+    </style>
+</head>
+<body class="decoy-mmt">
+    <header class="decoy-mmt-header">
+        <a href="#" class="decoy-mmt-logo" onclick="track('logo')">MakeMyTrip</a>
+        <nav class="decoy-mmt-nav">
+            <a href="#" onclick="track('flights')">Flights</a>
+            <a href="#" onclick="track('hotels')">Hotels</a>
+            <a href="#" onclick="track('login')">Login</a>
+        </nav>
+    </header>
+    <main class="decoy-mmt-main">
+        <h1>Login</h1>
+        <form id="f" onsubmit="return false;">
+            <input type="text" placeholder="Email or Phone" id="user" autocomplete="off">
+            <input type="password" placeholder="Password" id="pass">
+            <button type="submit" class="btn" id="btn">Login</button>
+        </form>
+        <p id="err" style="display:none; color:#d93025; font-size:0.875rem;"></p>
+    </main>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','makemytrip decoy');
+        document.getElementById('f').onsubmit=function(){ var u=document.getElementById('user').value; document.getElementById('btn').textContent='Logging in...'; document.getElementById('btn').disabled=true; track('login_attempt',u); setTimeout(function(){ document.getElementById('err').style.display='block'; document.getElementById('err').textContent='Invalid credentials.'; document.getElementById('btn').textContent='Login'; document.getElementById('btn').disabled=false; }, 1800); };
+    </script>
+</body>
+</html>

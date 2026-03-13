@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flipkart – Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-fk { font-family: Arial, sans-serif; background: #fff; min-height: 100vh; margin: 0; color: #2874f0; }
+        .decoy-fk-header { background: #2874f0; color: #fff; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 1.5rem; }
+        .decoy-fk-logo { color: #fff; font-size: 1.25rem; font-weight: bold; text-decoration: none; }
+        .decoy-fk-search { flex: 1; max-width: 400px; display: flex; background: #fff; border-radius: 2px; overflow: hidden; }
+        .decoy-fk-search input { flex: 1; padding: 0.4rem 0.75rem; border: none; font-size: 0.9rem; color: #333; }
+        .decoy-fk-search button { background: #fff; border: none; padding: 0.4rem 0.75rem; cursor: pointer; }
+        .decoy-fk-main { max-width: 380px; margin: 2rem auto; padding: 2rem; border: 1px solid #e0e0e0; border-radius: 2px; }
+        .decoy-fk-main h1 { font-size: 1.5rem; color: #2874f0; margin-bottom: 1rem; font-weight: 500; }
+        .decoy-fk-main input { width: 100%; padding: 0.6rem; margin-bottom: 0.75rem; border: 1px solid #e0e0e0; border-radius: 2px; box-sizing: border-box; }
+        .decoy-fk-main .btn { width: 100%; padding: 0.6rem; background: #fb641b; color: #fff; border: none; border-radius: 2px; font-size: 1rem; cursor: pointer; }
+        .decoy-fk-main .btn:hover { background: #e55a14; }
+        .decoy-fk-main .link { color: #2874f0; font-size: 0.875rem; }
+    </style>
+</head>
+<body class="decoy-fk">
+    <header class="decoy-fk-header">
+        <a href="#" class="decoy-fk-logo" onclick="track('logo')">Flipkart</a>
+        <div class="decoy-fk-search">
+            <input type="text" placeholder="Search for products" readonly>
+            <button type="button">Search</button>
+        </div>
+        <span onclick="track('cart')">Cart</span>
+        <span onclick="track('login')">Login</span>
+    </header>
+    <main class="decoy-fk-main">
+        <h1>Login</h1>
+        <form id="f" onsubmit="return false;">
+            <input type="text" placeholder="Enter Email/Mobile" id="user" autocomplete="off">
+            <input type="password" placeholder="Enter Password" id="pass">
+            <button type="submit" class="btn" id="btn">Login</button>
+        </form>
+        <a href="#" class="link" onclick="track('forgot')">Forgot?</a>
+        <p id="err" style="display:none; color:#d93025; font-size:0.875rem;"></p>
+    </main>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','flipkart decoy');
+        document.getElementById('f').onsubmit=function(){ var u=document.getElementById('user').value; document.getElementById('btn').textContent='Logging in...'; document.getElementById('btn').disabled=true; track('login_attempt',u); setTimeout(function(){ document.getElementById('err').style.display='block'; document.getElementById('err').textContent='Invalid credentials.'; document.getElementById('btn').textContent='Login'; document.getElementById('btn').disabled=false; }, 1800); };
+    </script>
+</body>
+</html>

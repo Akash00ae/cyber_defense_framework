@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Cyber Defense Framework</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="shield">🛡️</div>
+            <span>CyberDefense</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li>
+                <a href="#overview" class="active" data-section="overview">
+                    <span class="nav-icon">📊</span> Overview
+                </a>
+            </li>
+            <li>
+                <a href="#analytics" data-section="analytics">
+                    <span class="nav-icon">📈</span> Analytics
+                </a>
+            </li>
+            <li>
+                <a href="#logs" data-section="logs">
+                    <span class="nav-icon">📋</span> Security Logs
+                </a>
+            </li>
+            <li>
+                <a href="#config" data-section="config">
+                    <span class="nav-icon">⚙️</span> Configuration
+                </a>
+            </li>
+            <li>
+                <a href="/" >
+                    <span class="nav-icon">🏠</span> Back to Home
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="/export_logs">📥 Export Logs (CSV)</a>
+        </div>
+    </aside>
+
+    <!-- Mobile Toggle -->
+    <button class="menu-toggle" id="menuToggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <div class="content-header">
+            <div>
+                <h2>Security Dashboard</h2>
+                <p class="subtitle">Real-time threat monitoring and analytics</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="refreshDashboard()">🔄 Refresh</button>
+                <a href="/export_logs" class="btn btn-primary">📥 Export CSV</a>
+            </div>
+        </div>
+
+        <!-- ─── Overview Section ──────────────────────────────────────── -->
+        <section id="section-overview">
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Total Requests</span>
+                        <div class="stat-icon blue">📊</div>
+                    </div>
+                    <div class="stat-value" id="statTotal">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Abnormal Attempts</span>
+                        <div class="stat-icon red">⚠️</div>
+                    </div>
+                    <div class="stat-value" id="statAbnormal">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Normal Requests</span>
+                        <div class="stat-icon green">✅</div>
+                    </div>
+                    <div class="stat-value" id="statNormal">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Active Sessions</span>
+                        <div class="stat-icon yellow">👥</div>
+                    </div>
+                    <div class="stat-value" id="statActive">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Decoy Interactions</span>
+                        <div class="stat-icon purple">🎭</div>
+                    </div>
+                    <div class="stat-value" id="statDecoy">0</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>📈 Monthly Activity</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>🍩 Request Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card full-width">
+                    <h3>📉 24-Hour Attack Trend</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Activity Feed -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>
+                        <span class="live-dot"></span>
+                        Live Activity Feed
+                    </h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);" id="lastUpdate">—</span>
+                </div>
+                <div class="activity-feed" id="activityFeed">
+                    <p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:2rem;">Loading activity...</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ─── Analytics Section ─────────────────────────────────────── -->
+        <section id="section-analytics" class="hidden">
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>🎯 Risk Score Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="riskDistChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>🌐 Top IPs by Request Volume</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="topIpsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>📊 Behavioral Pattern Insights</h3>
+                    <a href="/export_logs" class="btn btn-outline" style="font-size:0.75rem;">📥 Export Report</a>
+                </div>
+                <div id="insightsPanel" style="padding:1rem 0;">
+                    <p style="color:var(--text-muted);font-size:0.85rem;">Generating insights...</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ─── Logs Section ──────────────────────────────────────────── -->
+        <section id="section-logs" class="hidden">
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>📋 Security Logs</h3>
+                    <a href="/export_logs" class="btn btn-primary" style="font-size:0.75rem;">📥 Export CSV</a>
+                </div>
+                <div class="logs-table-wrapper">
+                    <table class="logs-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Timestamp</th>
+                                <th>Input</th>
+                                <th>Risk Score</th>
+                                <th>Status</th>
+                                <th>IP Address</th>
+                                <th>Detected Site</th>
+                                <th>Redirect</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem;">
+                                    Loading logs...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ─── Configuration Section ─────────────────────────────────── -->
+        <section id="section-config" class="hidden">
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>⚙️ Risk Scoring Configuration</h3>
+                    <button class="btn btn-primary" onclick="saveConfig()">💾 Save Configuration</button>
+                </div>
+                <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:1.5rem;">
+                    Configure the risk scoring parameters. Changes take effect immediately for new requests.
+                </p>
+                <div class="config-grid" id="configGrid">
+                    <!-- Populated by JS -->
+                </div>
+                <div id="configStatus" style="margin-top:1rem;font-size:0.8rem;"></div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

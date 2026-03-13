@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search – Google Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="decoy-page decoy-google-page decoy-files-page">
+
+    <header class="decoy-google-header">
+        <a href="#" class="decoy-google-logo" onclick="trackAction('logo_click','Logo clicked')">
+            <span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span class="g6">e</span>
+        </a>
+        <div class="decoy-google-search-wrap">
+            <div class="decoy-google-search-bar">
+                <input type="text" value="config files server" placeholder="Search" readonly aria-label="Search">
+                <span class="search-icon">&#128269;</span>
+                <span class="mic-icon">&#127908;</span>
+            </div>
+        </div>
+        <div class="decoy-google-right">
+            <a href="#" class="decoy-google-apps" onclick="trackAction('apps_click','Apps'); return false;" title="Google apps">&#9776;</a>
+            <div class="decoy-google-profile" onclick="trackAction('profile_click','Profile')" title="Google Account" role="button" tabindex="0"></div>
+        </div>
+    </header>
+
+    <nav class="decoy-google-nav">
+        <a href="#" class="active">All</a>
+        <a href="#">News</a>
+        <a href="#">Videos</a>
+        <a href="#">Images</a>
+        <a href="#">Shopping</a>
+        <a href="#">More</a>
+    </nav>
+
+    <main class="decoy-google-main">
+        <p class="decoy-google-result-count">About 4,120 results</p>
+
+        <div class="decoy-google-result-item" onclick="trackAction('result_click','config/')">
+            <div class="result-url">https://server.internal › config</div>
+            <a href="#" class="result-title">config/ – Directory listing</a>
+            <p class="result-snippet">Configuration files and environment variables. Last modified 2026-03-05.</p>
+        </div>
+        <div class="decoy-google-result-item" onclick="trackAction('result_click','database/')">
+            <div class="result-url">https://server.internal › database</div>
+            <a href="#" class="result-title">database/ – Directory listing</a>
+            <p class="result-snippet">Database dumps and credentials. users_dump.sql, db_credentials.yaml.</p>
+        </div>
+        <div class="decoy-google-result-item" onclick="trackAction('result_click','logs/')">
+            <div class="result-url">https://server.internal › logs</div>
+            <a href="#" class="result-title">logs/ – Access and error logs</a>
+            <p class="result-snippet">access.log, error.log. 156 MB total.</p>
+        </div>
+        <div class="decoy-google-result-item" onclick="trackAction('result_click','.env')">
+            <div class="result-url">https://server.internal › .env</div>
+            <a href="#" class="result-title">.env – Environment variables</a>
+            <p class="result-snippet">Application secrets and API keys. 1.2 KB.</p>
+        </div>
+        <div class="decoy-google-result-item" onclick="trackAction('result_click','ssl/')">
+            <div class="result-url">https://server.internal › ssl</div>
+            <a href="#" class="result-title">ssl/ – Certificates and keys</a>
+            <p class="result-snippet">server.key, certificates. Private key storage.</p>
+        </div>
+    </main>
+
+    <script>
+        function trackAction(action, details) {
+            fetch('/decoy/action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'file_directory', action: action, details: details })
+            }).catch(function() {});
+        }
+        trackAction('page_loaded', 'Decoy file directory accessed');
+
+        document.querySelectorAll('.decoy-google-result-item').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                var title = this.querySelector('.result-title').textContent;
+                this.style.background = '#f1f3f4';
+                var self = this;
+                setTimeout(function() {
+                    self.style.background = '';
+                    alert('Access denied: Insufficient permissions.');
+                    trackAction('access_denied', title);
+                }, 400);
+            });
+        });
+    </script>
+</body>
+</html>

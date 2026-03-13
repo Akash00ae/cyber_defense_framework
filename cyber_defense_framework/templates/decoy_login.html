@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login — Secure Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="decoy-page">
+
+    <div class="decoy-login-wrapper">
+        <div class="decoy-login-card">
+            <div class="logo">
+                <h2>🔒 Secure Admin Portal</h2>
+                <p>Please sign in to continue</p>
+            </div>
+
+            <form class="decoy-form" id="decoyLoginForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
+                <p class="error-msg" id="loginError"></p>
+            </form>
+
+            <p style="text-align:center;margin-top:1.5rem;font-size:0.75rem;color:#94a3b8;">
+                Protected by Enterprise Security Suite v4.2.1
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Track all interactions inside decoy
+        function trackAction(action, details) {
+            fetch('/decoy/action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'login_panel', action: action, details: details })
+            }).catch(function() {});
+        }
+
+        // Track page load
+        trackAction('page_loaded', 'Decoy login page accessed');
+
+        // Track focus on input fields
+        document.getElementById('username').addEventListener('focus', function() {
+            trackAction('field_focus', 'username field');
+        });
+        document.getElementById('password').addEventListener('focus', function() {
+            trackAction('field_focus', 'password field');
+        });
+
+        // Handle login attempt
+        document.getElementById('decoyLoginForm').addEventListener('submit', function() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var loginBtn = document.getElementById('loginBtn');
+            var errorMsg = document.getElementById('loginError');
+
+            loginBtn.textContent = 'Authenticating...';
+            loginBtn.disabled = true;
+
+            // Send credentials to tracking endpoint
+            fetch('/decoy/login_attempt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, password: password.length + ' chars' })
+            }).catch(function() {});
+
+            // Simulate authentication delay then show error
+            setTimeout(function() {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Authentication failed. Invalid credentials. Attempt logged.';
+                loginBtn.textContent = 'Sign In';
+                loginBtn.disabled = false;
+
+                trackAction('login_failed', 'username: ' + username);
+            }, 2000 + Math.random() * 1500);
+        });
+
+        // Track any keystrokes (count only, not actual keys for ethics)
+        var keystrokeCount = 0;
+        document.addEventListener('keydown', function() {
+            keystrokeCount++;
+            if (keystrokeCount % 20 === 0) {
+                trackAction('keystrokes', keystrokeCount + ' keystrokes recorded');
+            }
+        });
+    </script>
+</body>
+</html>

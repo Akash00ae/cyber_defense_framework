@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X (Twitter) – Log in</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-tw { font-family: Arial, sans-serif; background: #000; min-height: 100vh; margin: 0; color: #fff; }
+        .decoy-tw-layout { max-width: 600px; margin: 0 auto; padding: 2rem; }
+        .decoy-tw-logo { font-size: 2rem; margin-bottom: 2rem; }
+        .decoy-tw-logo a { color: #fff; text-decoration: none; }
+        .decoy-tw h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .decoy-tw input { width: 100%; padding: 0.75rem 1rem; margin-bottom: 1rem; background: #000; border: 1px solid #333; border-radius: 4px; color: #fff; font-size: 1rem; box-sizing: border-box; }
+        .decoy-tw .btn { width: 100%; padding: 0.75rem; background: #fff; color: #000; border: none; border-radius: 9999px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .decoy-tw .btn:hover { background: #e6e6e6; }
+        .decoy-tw .link { color: #1d9bf0; font-size: 0.875rem; text-decoration: none; }
+    </style>
+</head>
+<body class="decoy-tw">
+    <div class="decoy-tw-layout">
+        <div class="decoy-tw-logo"><a href="#" onclick="track('logo')">X</a></div>
+        <h1>Sign in to X</h1>
+        <form id="f" onsubmit="return false;">
+            <input type="text" placeholder="Phone, email, or username" id="user" autocomplete="off">
+            <input type="password" placeholder="Password" id="pass">
+            <button type="submit" class="btn" id="btn">Next</button>
+        </form>
+        <a href="#" class="link" onclick="track('forgot')">Forgot password?</a>
+        <p id="err" style="display:none; color:#f4212e; font-size:0.875rem;"></p>
+    </div>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','twitter decoy');
+        document.getElementById('f').onsubmit=function(){ var u=document.getElementById('user').value; document.getElementById('btn').textContent='Signing in...'; document.getElementById('btn').disabled=true; track('login_attempt',u); setTimeout(function(){ document.getElementById('err').style.display='block'; document.getElementById('err').textContent='The username and password you entered did not match.'; document.getElementById('btn').textContent='Next'; document.getElementById('btn').disabled=false; }, 1800); };
+    </script>
+</body>
+</html>

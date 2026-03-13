@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Administration Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="decoy-page decoy-admin">
+
+    <!-- Fake Admin Header -->
+    <header class="decoy-admin-header">
+        <h1>⚙️ System Administration Panel</h1>
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <span style="font-size:0.8rem;color:#94a3b8;">admin@server</span>
+            <span style="font-size:0.8rem;background:#334155;padding:0.3rem 0.75rem;border-radius:6px;cursor:pointer;" onclick="trackAction('logout_click','Clicked logout')">Logout</span>
+        </div>
+    </header>
+
+    <div class="decoy-admin-body">
+
+        <!-- Fake Statistics -->
+        <div class="decoy-stats-grid">
+            <div class="decoy-stat-card">
+                <div class="label">Server Uptime</div>
+                <div class="value">99.7%</div>
+            </div>
+            <div class="decoy-stat-card">
+                <div class="label">Active Users</div>
+                <div class="value">1,847</div>
+            </div>
+            <div class="decoy-stat-card">
+                <div class="label">CPU Usage</div>
+                <div class="value">42%</div>
+            </div>
+            <div class="decoy-stat-card">
+                <div class="label">Memory Usage</div>
+                <div class="value">6.2 GB</div>
+            </div>
+            <div class="decoy-stat-card">
+                <div class="label">Disk Space</div>
+                <div class="value">234 GB</div>
+            </div>
+        </div>
+
+        <!-- Fake Recent Users Table -->
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;color:#1e293b;">Recent User Activity</h3>
+        <table class="decoy-table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Last Login</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1001</td>
+                    <td>j.admin</td>
+                    <td>admin@internal.corp</td>
+                    <td>Super Admin</td>
+                    <td>2026-03-06 09:14</td>
+                    <td><span style="color:#22c55e;font-weight:600;">Active</span></td>
+                </tr>
+                <tr>
+                    <td>1002</td>
+                    <td>s.operator</td>
+                    <td>ops@internal.corp</td>
+                    <td>Operator</td>
+                    <td>2026-03-06 08:47</td>
+                    <td><span style="color:#22c55e;font-weight:600;">Active</span></td>
+                </tr>
+                <tr>
+                    <td>1003</td>
+                    <td>d.analyst</td>
+                    <td>analyst@internal.corp</td>
+                    <td>Analyst</td>
+                    <td>2026-03-05 17:32</td>
+                    <td><span style="color:#94a3b8;font-weight:600;">Offline</span></td>
+                </tr>
+                <tr>
+                    <td>1004</td>
+                    <td>m.security</td>
+                    <td>security@internal.corp</td>
+                    <td>Security Lead</td>
+                    <td>2026-03-06 07:15</td>
+                    <td><span style="color:#22c55e;font-weight:600;">Active</span></td>
+                </tr>
+                <tr>
+                    <td>1005</td>
+                    <td>r.backup</td>
+                    <td>backup@internal.corp</td>
+                    <td>Backup Admin</td>
+                    <td>2026-03-04 22:10</td>
+                    <td><span style="color:#f59e0b;font-weight:600;">Idle</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Fake System Config Section -->
+        <h3 style="font-size:1rem;font-weight:600;margin:2rem 0 1rem;color:#1e293b;">System Configuration</h3>
+        <table class="decoy-table">
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                    <th>Last Modified</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Max Connections</td><td>500</td><td>2026-02-28</td></tr>
+                <tr><td>Session Timeout</td><td>30 min</td><td>2026-03-01</td></tr>
+                <tr><td>Firewall Rules</td><td>247 active</td><td>2026-03-05</td></tr>
+                <tr><td>SSL Certificate</td><td>Valid until 2027-01-15</td><td>2026-01-15</td></tr>
+                <tr><td>Database Backup</td><td>Daily @ 02:00</td><td>2026-03-01</td></tr>
+                <tr><td>Log Retention</td><td>90 days</td><td>2026-02-15</td></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script>
+        function trackAction(action, details) {
+            fetch('/decoy/action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'admin_panel', action: action, details: details })
+            }).catch(function() {});
+        }
+
+        trackAction('page_loaded', 'Decoy admin panel accessed');
+
+        // Track clicks within the page
+        document.addEventListener('click', function(e) {
+            var target = e.target.closest('td, th, .decoy-stat-card, span');
+            if (target) {
+                trackAction('element_click', target.textContent.substring(0, 100).trim());
+            }
+        });
+
+        // Track scrolling
+        var scrollTrackTimeout;
+        window.addEventListener('scroll', function() {
+            clearTimeout(scrollTrackTimeout);
+            scrollTrackTimeout = setTimeout(function() {
+                trackAction('scroll', 'Scrolled to ' + Math.round(window.scrollY) + 'px');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

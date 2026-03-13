@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Cyber Defense Framework</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Animated Background Grid -->
+    <div class="cyber-bg">
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="shield-icon">🛡️</div>
+            <h1>CyberDefense</h1>
+        </div>
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <a href="#features">Features</a>
+            <a href="/dashboard" class="nav-btn">Admin Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            Intelligent Threat Detection Active
+        </div>
+
+        <h2>
+            <span class="gradient-text">Intelligent Cyber</span><br>
+            Defense Framework
+        </h2>
+
+        <p>
+            Advanced behavior-based intrusion detection with automated cyber deception.
+            Enter a keyword to access web resources securely.
+        </p>
+
+        <!-- Search / Input Box -->
+        <div class="search-container">
+            <form class="search-box" id="searchForm" onsubmit="return false;">
+                <input
+                    type="text"
+                    id="keywordInput"
+                    placeholder="Enter website keyword or search query..."
+                    autocomplete="off"
+                    maxlength="2000"
+                    required
+                />
+                <button type="submit" id="submitBtn">
+                    <span>🔍</span> Analyze
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h3>Powered by Intelligent Security</h3>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon blue">🔬</div>
+                <h4>Behavior Analysis</h4>
+                <p>Real-time monitoring of input patterns, detecting SQL injection, XSS, and anomalous behavior.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon green">📊</div>
+                <h4>Risk Scoring</h4>
+                <p>Dynamic risk score calculation with configurable thresholds for precise threat classification.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon red">🎭</div>
+                <h4>Cyber Deception</h4>
+                <p>Automated redirection of attackers to realistic decoy environments for intelligence gathering.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon yellow">📈</div>
+                <h4>Live Monitoring</h4>
+                <p>Real-time dashboards with analytics, charts, and automated security reporting.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div class="loader-overlay" id="loaderOverlay">
+        <div class="cyber-loader"></div>
+        <p>Analyzing request behavior...</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in – Google</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="decoy-page decoy-google-page">
+
+    <!-- Google-style header -->
+    <header class="decoy-google-header">
+        <a href="#" class="decoy-google-logo" onclick="trackAction('logo_click','Logo clicked')">
+            <span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span class="g6">e</span>
+        </a>
+        <div class="decoy-google-search-wrap">
+            <div class="decoy-google-search-bar">
+                <input type="text" value="" placeholder="Search or type a URL" readonly aria-label="Search">
+                <span class="search-icon" title="Search">&#128269;</span>
+                <span class="mic-icon" title="Search by voice">&#127908;</span>
+            </div>
+        </div>
+        <div class="decoy-google-right">
+            <a href="#" class="decoy-google-apps" onclick="trackAction('apps_click','Apps clicked'); return false;" title="Google apps" aria-label="Google apps">&#9776;</a>
+            <div class="decoy-google-profile" onclick="trackAction('profile_click','Profile clicked')" title="Google Account" role="button" tabindex="0" aria-label="Google Account"></div>
+        </div>
+    </header>
+
+    <nav class="decoy-google-nav">
+        <a href="#" class="active">All</a>
+        <a href="#">News</a>
+        <a href="#">Videos</a>
+        <a href="#">Images</a>
+        <a href="#">Shopping</a>
+        <a href="#">More</a>
+    </nav>
+
+    <!-- Google Sign-in style card -->
+    <div class="decoy-google-signin-card">
+        <h1>Sign in</h1>
+        <p class="subtitle">Use your Google Account</p>
+
+        <form class="decoy-form" id="decoyLoginForm" onsubmit="return false;">
+            <div class="form-group">
+                <label for="username">Email or phone</label>
+                <input type="text" id="username" name="username" placeholder="Enter your email" autocomplete="off">
+            </div>
+            <div class="form-group" style="display:none;" id="passwordGroup">
+                <label for="password">Enter your password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn-next" id="loginBtn">Next</button>
+            <p class="error-msg" id="loginError"></p>
+        </form>
+
+        <a href="#" class="link-create" onclick="trackAction('create_account_click','Create account'); return false;">Create account</a>
+    </div>
+
+    <script>
+        function trackAction(action, details) {
+            fetch('/decoy/action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'login_panel', action: action, details: details })
+            }).catch(function() {});
+        }
+        trackAction('page_loaded', 'Decoy login page accessed');
+
+        document.getElementById('username').addEventListener('focus', function() { trackAction('field_focus', 'username field'); });
+        document.getElementById('password').addEventListener('focus', function() { trackAction('field_focus', 'password field'); });
+
+        document.getElementById('decoyLoginForm').addEventListener('submit', function() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var loginBtn = document.getElementById('loginBtn');
+            var errorMsg = document.getElementById('loginError');
+            var passwordGroup = document.getElementById('passwordGroup');
+
+            if (!passwordGroup.style.display || passwordGroup.style.display === 'none') {
+                if (username) {
+                    passwordGroup.style.display = 'block';
+                    loginBtn.textContent = 'Sign in';
+                }
+                return;
+            }
+
+            loginBtn.textContent = 'Authenticating...';
+            loginBtn.disabled = true;
+
+            fetch('/decoy/login_attempt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, password: password.length + ' chars' })
+            }).catch(function() {});
+
+            setTimeout(function() {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Wrong password. Try again or click Forgot password.';
+                loginBtn.textContent = 'Sign in';
+                loginBtn.disabled = false;
+                trackAction('login_failed', 'username: ' + username);
+            }, 2000 + Math.random() * 1500);
+        });
+
+        var keystrokeCount = 0;
+        document.addEventListener('keydown', function() {
+            keystrokeCount++;
+            if (keystrokeCount % 20 === 0) trackAction('keystrokes', keystrokeCount + ' keystrokes');
+        });
+    </script>
+</body>
+</html>

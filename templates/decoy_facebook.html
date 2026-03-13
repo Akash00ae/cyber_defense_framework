@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook – Log In or Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-fb { font-family: Arial, sans-serif; background: #f0f2f5; min-height: 100vh; margin: 0; color: #1c1e21; }
+        .decoy-fb-header { background: #fff; padding: 0.5rem 1.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid #dddfe2; }
+        .decoy-fb-logo { color: #1877f2; font-size: 1.75rem; font-weight: bold; text-decoration: none; }
+        .decoy-fb-main { max-width: 400px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .decoy-fb-main h1 { font-size: 1.5rem; margin-bottom: 1rem; font-weight: 600; }
+        .decoy-fb-main input { width: 100%; padding: 0.75rem; margin-bottom: 0.75rem; border: 1px solid #dddfe2; border-radius: 6px; font-size: 1rem; box-sizing: border-box; }
+        .decoy-fb-main .btn { width: 100%; padding: 0.75rem; background: #1877f2; color: #fff; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+        .decoy-fb-main .btn:hover { background: #166fe5; }
+        .decoy-fb-main .link { color: #1877f2; font-size: 0.875rem; text-decoration: none; }
+    </style>
+</head>
+<body class="decoy-fb">
+    <header class="decoy-fb-header">
+        <a href="#" class="decoy-fb-logo" onclick="track('logo')">facebook</a>
+    </header>
+    <main class="decoy-fb-main">
+        <h1>Log in to Facebook</h1>
+        <form id="f" onsubmit="return false;">
+            <input type="text" placeholder="Email or phone number" id="user" autocomplete="off">
+            <input type="password" placeholder="Password" id="pass">
+            <button type="submit" class="btn" id="btn">Log In</button>
+        </form>
+        <a href="#" class="link" onclick="track('forgot')">Forgotten password?</a>
+        <p id="err" style="display:none; color:#d93025; font-size:0.875rem;"></p>
+    </main>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','facebook decoy');
+        document.getElementById('f').onsubmit=function(){ var u=document.getElementById('user').value; document.getElementById('btn').textContent='Logging in...'; document.getElementById('btn').disabled=true; track('login_attempt',u); setTimeout(function(){ document.getElementById('err').style.display='block'; document.getElementById('err').textContent='Invalid username or password.'; document.getElementById('btn').textContent='Log In'; document.getElementById('btn').disabled=false; }, 1800); };
+    </script>
+</body>
+</html>

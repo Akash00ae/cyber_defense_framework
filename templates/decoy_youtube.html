@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-yt { font-family: Arial, sans-serif; background: #0f0f0f; min-height: 100vh; margin: 0; color: #fff; }
+        .decoy-yt-header { background: #212121; padding: 0.5rem 1rem; display: flex; align-items: center; gap: 1rem; }
+        .decoy-yt-logo { color: #ff0000; font-size: 1.5rem; font-weight: bold; text-decoration: none; }
+        .decoy-yt-search { flex: 1; max-width: 500px; display: flex; }
+        .decoy-yt-search input { flex: 1; padding: 0.5rem 1rem; background: #121212; border: 1px solid #303030; color: #fff; font-size: 0.9rem; }
+        .decoy-yt-search button { background: #303030; border: 1px solid #303030; color: #fff; padding: 0.5rem 1.25rem; cursor: pointer; }
+        .decoy-yt-content { padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .decoy-yt-card { background: #272727; border-radius: 8px; overflow: hidden; cursor: pointer; }
+        .decoy-yt-card .thumb { height: 160px; background: #3f3f3f; }
+        .decoy-yt-card .info { padding: 0.75rem; font-size: 0.9rem; }
+        .decoy-yt-card .title { font-weight: 500; margin-bottom: 0.25rem; }
+        .decoy-yt-card .meta { color: #aaa; font-size: 0.8rem; }
+    </style>
+</head>
+<body class="decoy-yt">
+    <header class="decoy-yt-header">
+        <a href="#" class="decoy-yt-logo" onclick="track('logo')">YouTube</a>
+        <div class="decoy-yt-search">
+            <input type="text" placeholder="Search" readonly>
+            <button type="button">Search</button>
+        </div>
+        <span onclick="track('signin')">Sign in</span>
+    </header>
+    <div class="decoy-yt-content">
+        <div class="decoy-yt-card" onclick="track('video_click', '1')"><div class="thumb"></div><div class="info"><div class="title">Recommended for you</div><div class="meta">Views · Channel</div></div></div>
+        <div class="decoy-yt-card" onclick="track('video_click', '2')"><div class="thumb"></div><div class="info"><div class="title">Popular video</div><div class="meta">Views · Channel</div></div></div>
+        <div class="decoy-yt-card" onclick="track('video_click', '3')"><div class="thumb"></div><div class="info"><div class="title">Trending</div><div class="meta">Views · Channel</div></div></div>
+        <div class="decoy-yt-card" onclick="track('video_click', '4')"><div class="thumb"></div><div class="info"><div class="title">Watch later</div><div class="meta">Views · Channel</div></div></div>
+    </div>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','youtube decoy');
+    </script>
+</body>
+</html>

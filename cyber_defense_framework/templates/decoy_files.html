@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager — Server</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="decoy-page decoy-files-page">
+
+    <!-- Fake File Manager Header -->
+    <header class="decoy-files-header">
+        <h1>📁 File Manager</h1>
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <span style="font-size:0.75rem;color:#94a3b8;">root@prod-server-01</span>
+            <span style="font-size:0.75rem;background:#334155;color:#fff;padding:0.3rem 0.75rem;border-radius:6px;cursor:pointer;" onclick="trackAction('upload_click','Upload button clicked')">⬆️ Upload</span>
+        </div>
+    </header>
+
+    <div class="file-browser">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <span onclick="trackAction('nav_click','root')">🏠 /</span> &gt;
+            <span onclick="trackAction('nav_click','var')">var</span> &gt;
+            <span onclick="trackAction('nav_click','www')">www</span> &gt;
+            <span>html</span>
+        </div>
+
+        <!-- File Listing -->
+        <div class="file-list">
+            <div class="file-item" onclick="trackAction('file_click','.. (parent directory)')">
+                <span class="file-icon">📁</span>
+                <span class="file-name">..</span>
+                <span class="file-size">—</span>
+                <span class="file-date">—</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','config/')">
+                <span class="file-icon">📁</span>
+                <span class="file-name">config/</span>
+                <span class="file-size">—</span>
+                <span class="file-date">2026-03-05 14:22</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','database/')">
+                <span class="file-icon">📁</span>
+                <span class="file-name">database/</span>
+                <span class="file-size">—</span>
+                <span class="file-date">2026-03-06 02:00</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','logs/')">
+                <span class="file-icon">📁</span>
+                <span class="file-name">logs/</span>
+                <span class="file-size">—</span>
+                <span class="file-date">2026-03-06 09:15</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','backups/')">
+                <span class="file-icon">📁</span>
+                <span class="file-name">backups/</span>
+                <span class="file-size">—</span>
+                <span class="file-date">2026-03-06 02:30</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','ssl/')">
+                <span class="file-icon">📁</span>
+                <span class="file-name">ssl/</span>
+                <span class="file-size">—</span>
+                <span class="file-date">2026-01-15 10:00</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','index.html')">
+                <span class="file-icon">📄</span>
+                <span class="file-name">index.html</span>
+                <span class="file-size">14.2 KB</span>
+                <span class="file-date">2026-03-04 16:30</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','app.config.json')">
+                <span class="file-icon">📄</span>
+                <span class="file-name">app.config.json</span>
+                <span class="file-size">3.8 KB</span>
+                <span class="file-date">2026-03-01 11:20</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','.env')">
+                <span class="file-icon">📄</span>
+                <span class="file-name">.env</span>
+                <span class="file-size">1.2 KB</span>
+                <span class="file-date">2026-02-28 09:45</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','db_credentials.yaml')">
+                <span class="file-icon">📄</span>
+                <span class="file-name">db_credentials.yaml</span>
+                <span class="file-size">0.8 KB</span>
+                <span class="file-date">2026-02-20 13:10</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','server.key')">
+                <span class="file-icon">🔑</span>
+                <span class="file-name">server.key</span>
+                <span class="file-size">3.2 KB</span>
+                <span class="file-date">2026-01-15 10:00</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','users_dump.sql')">
+                <span class="file-icon">🗃️</span>
+                <span class="file-name">users_dump.sql</span>
+                <span class="file-size">24.6 MB</span>
+                <span class="file-date">2026-03-06 02:00</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','access.log')">
+                <span class="file-icon">📄</span>
+                <span class="file-name">access.log</span>
+                <span class="file-size">156.3 MB</span>
+                <span class="file-date">2026-03-06 09:14</span>
+            </div>
+            <div class="file-item" onclick="trackAction('file_click','deploy.sh')">
+                <span class="file-icon">📄</span>
+                <span class="file-name">deploy.sh</span>
+                <span class="file-size">2.1 KB</span>
+                <span class="file-date">2026-03-03 08:00</span>
+            </div>
+        </div>
+
+        <p style="text-align:center;margin-top:1.5rem;font-size:0.75rem;color:#94a3b8;">
+            Server File Manager v2.4.0 &mdash; 14 items &mdash; 184.5 MB total
+        </p>
+    </div>
+
+    <script>
+        function trackAction(action, details) {
+            fetch('/decoy/action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'file_directory', action: action, details: details })
+            }).catch(function() {});
+        }
+
+        trackAction('page_loaded', 'Decoy file directory accessed');
+
+        // Track all clicks
+        document.addEventListener('click', function(e) {
+            var item = e.target.closest('.file-item');
+            if (item) {
+                var fileName = item.querySelector('.file-name').textContent;
+                // Simulate a brief loading state
+                item.style.background = '#e0f2fe';
+                setTimeout(function() {
+                    item.style.background = '';
+                    alert('Access denied: Insufficient permissions to open "' + fileName + '"');
+                    trackAction('access_denied', fileName);
+                }, 500 + Math.random() * 500);
+            }
+        });
+    </script>
+</body>
+</html>

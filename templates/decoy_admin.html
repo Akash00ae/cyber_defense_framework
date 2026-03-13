@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Account – Security &amp; privacy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="decoy-page decoy-google-page decoy-admin">
+
+    <header class="decoy-google-header">
+        <a href="#" class="decoy-google-logo" onclick="trackAction('logo_click','Logo clicked')">
+            <span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span class="g6">e</span>
+        </a>
+        <div class="decoy-google-search-wrap">
+            <div class="decoy-google-search-bar">
+                <input type="text" value="" placeholder="Search Google Account" readonly aria-label="Search">
+                <span class="search-icon">&#128269;</span>
+                <span class="mic-icon">&#127908;</span>
+            </div>
+        </div>
+        <div class="decoy-google-right">
+            <a href="#" class="decoy-google-apps" onclick="trackAction('apps_click','Apps'); return false;" title="Google apps">&#9776;</a>
+            <div class="decoy-google-profile" onclick="trackAction('profile_click','Profile')" title="Google Account" role="button" tabindex="0"></div>
+        </div>
+    </header>
+
+    <nav class="decoy-google-nav">
+        <a href="#">All</a>
+        <a href="#" class="active">Account</a>
+        <a href="#">Security</a>
+        <a href="#">Privacy</a>
+        <a href="#">More</a>
+    </nav>
+
+    <main class="decoy-google-main" style="max-width: 900px;">
+        <nav class="decoy-google-account-nav">
+            <a href="#" class="active">Overview</a>
+            <a href="#">Personal info</a>
+            <a href="#">Security</a>
+            <a href="#">Privacy</a>
+        </nav>
+
+        <div class="decoy-google-section">
+            <h2>Your account</h2>
+            <div class="decoy-google-stat-cards">
+                <div class="decoy-google-stat-card" onclick="trackAction('stat_click','Server Uptime')">
+                    <div class="label">Server Uptime</div>
+                    <div class="value">99.7%</div>
+                </div>
+                <div class="decoy-google-stat-card" onclick="trackAction('stat_click','Active Users')">
+                    <div class="label">Active Users</div>
+                    <div class="value">1,847</div>
+                </div>
+                <div class="decoy-google-stat-card" onclick="trackAction('stat_click','CPU')">
+                    <div class="label">CPU Usage</div>
+                    <div class="value">42%</div>
+                </div>
+                <div class="decoy-google-stat-card" onclick="trackAction('stat_click','Memory')">
+                    <div class="label">Memory</div>
+                    <div class="value">6.2 GB</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="decoy-google-section">
+            <h2>Recent activity</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Last sign-in</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="trackAction('row_click','j.admin')">
+                        <td>j.admin</td>
+                        <td>admin@internal.corp</td>
+                        <td>Super Admin</td>
+                        <td>2026-03-06 09:14</td>
+                    </tr>
+                    <tr onclick="trackAction('row_click','s.operator')">
+                        <td>s.operator</td>
+                        <td>ops@internal.corp</td>
+                        <td>Operator</td>
+                        <td>2026-03-06 08:47</td>
+                    </tr>
+                    <tr onclick="trackAction('row_click','d.analyst')">
+                        <td>d.analyst</td>
+                        <td>analyst@internal.corp</td>
+                        <td>Analyst</td>
+                        <td>2026-03-05 17:32</td>
+                    </tr>
+                    <tr onclick="trackAction('row_click','m.security')">
+                        <td>m.security</td>
+                        <td>security@internal.corp</td>
+                        <td>Security Lead</td>
+                        <td>2026-03-06 07:15</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="decoy-google-section">
+            <h2>System configuration</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Setting</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Max connections</td><td>500</td></tr>
+                    <tr><td>Session timeout</td><td>30 min</td></tr>
+                    <tr><td>Firewall rules</td><td>247 active</td></tr>
+                    <tr><td>SSL certificate</td><td>Valid until 2027-01-15</td></tr>
+                    <tr><td>Database backup</td><td>Daily @ 02:00</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        function trackAction(action, details) {
+            fetch('/decoy/action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'admin_panel', action: action, details: details })
+            }).catch(function() {});
+        }
+        trackAction('page_loaded', 'Decoy admin panel accessed');
+
+        document.addEventListener('click', function(e) {
+            var target = e.target.closest('td, .decoy-google-stat-card, .decoy-google-nav a');
+            if (target) trackAction('element_click', target.textContent.substring(0, 80).trim());
+        });
+
+        var scrollTrackTimeout;
+        window.addEventListener('scroll', function() {
+            clearTimeout(scrollTrackTimeout);
+            scrollTrackTimeout = setTimeout(function() {
+                trackAction('scroll', 'Scrolled to ' + Math.round(window.scrollY) + 'px');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

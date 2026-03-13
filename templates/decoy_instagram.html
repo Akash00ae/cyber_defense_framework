@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram – Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-ig { font-family: Arial, sans-serif; background: #fafafa; min-height: 100vh; margin: 0; color: #262626; }
+        .decoy-ig-wrap { max-width: 400px; margin: 3rem auto; padding: 2rem; background: #fff; border: 1px solid #dbdbdb; border-radius: 4px; text-align: center; }
+        .decoy-ig-logo { font-size: 2rem; font-weight: bold; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1.5rem; }
+        .decoy-ig-wrap input { width: 100%; padding: 0.6rem 0.75rem; margin-bottom: 0.5rem; border: 1px solid #dbdbdb; border-radius: 4px; background: #fafafa; box-sizing: border-box; }
+        .decoy-ig-wrap .btn { width: 100%; padding: 0.5rem; background: #0095f6; color: #fff; border: none; border-radius: 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+        .decoy-ig-wrap .btn:hover { background: #0080e0; }
+        .decoy-ig-wrap .link { color: #0095f6; font-size: 0.8rem; text-decoration: none; }
+        .decoy-ig-feed { max-width: 500px; margin: 1rem auto; padding: 1rem; }
+        .decoy-ig-post { background: #fff; border: 1px solid #dbdbdb; border-radius: 4px; margin-bottom: 1rem; padding: 1rem; }
+    </style>
+</head>
+<body class="decoy-ig">
+    <div class="decoy-ig-wrap">
+        <div class="decoy-ig-logo" onclick="track('logo')">Instagram</div>
+        <form id="f" onsubmit="return false;">
+            <input type="text" placeholder="Phone number, username, or email" id="user" autocomplete="off">
+            <input type="password" placeholder="Password" id="pass">
+            <button type="submit" class="btn" id="btn">Log in</button>
+        </form>
+        <a href="#" class="link" onclick="track('forgot')">Forgot password?</a>
+        <p id="err" style="display:none; color:#ed4956; font-size:0.8rem;"></p>
+    </div>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','instagram decoy');
+        document.getElementById('f').onsubmit=function(){ var u=document.getElementById('user').value; document.getElementById('btn').textContent='Logging in...'; document.getElementById('btn').disabled=true; track('login_attempt',u); setTimeout(function(){ document.getElementById('err').style.display='block'; document.getElementById('err').textContent='Sorry, your password was incorrect.'; document.getElementById('btn').textContent='Log in'; document.getElementById('btn').disabled=false; }, 1800); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookMyShow – Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .decoy-bms { font-family: Arial, sans-serif; background: #fff; min-height: 100vh; margin: 0; color: #333; }
+        .decoy-bms-header { background: #f84464; color: #fff; padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 1.5rem; }
+        .decoy-bms-logo { color: #fff; font-size: 1.5rem; font-weight: bold; text-decoration: none; }
+        .decoy-bms-nav { font-size: 0.9rem; }
+        .decoy-bms-nav a { color: #fff; text-decoration: none; margin-right: 1rem; }
+        .decoy-bms-main { max-width: 400px; margin: 2rem auto; padding: 2rem; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .decoy-bms-main h1 { font-size: 1.5rem; color: #333; margin-bottom: 1rem; }
+        .decoy-bms-main input { width: 100%; padding: 0.65rem; margin-bottom: 0.75rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .decoy-bms-main .btn { width: 100%; padding: 0.65rem; background: #f84464; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        .decoy-bms-main .btn:hover { background: #e63a5a; }
+    </style>
+</head>
+<body class="decoy-bms">
+    <header class="decoy-bms-header">
+        <a href="#" class="decoy-bms-logo" onclick="track('logo')">BookMyShow</a>
+        <nav class="decoy-bms-nav">
+            <a href="#" onclick="track('movies')">Movies</a>
+            <a href="#" onclick="track('events')">Events</a>
+            <a href="#" onclick="track('login')">Login</a>
+        </nav>
+    </header>
+    <main class="decoy-bms-main">
+        <h1>Login / Sign Up</h1>
+        <form id="f" onsubmit="return false;">
+            <input type="text" placeholder="Mobile number or Email" id="user" autocomplete="off">
+            <input type="password" placeholder="Password" id="pass">
+            <button type="submit" class="btn" id="btn">Continue</button>
+        </form>
+        <p id="err" style="display:none; color:#d93025; font-size:0.875rem;"></p>
+    </main>
+    <script>
+        var decoyType = '{{ site_name }}';
+        function track(a,d){ fetch('/decoy/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:decoyType,action:a,details:d||''})}).catch(function(){}); }
+        track('page_loaded','bookmyshow decoy');
+        document.getElementById('f').onsubmit=function(){ var u=document.getElementById('user').value; document.getElementById('btn').textContent='Please wait...'; document.getElementById('btn').disabled=true; track('login_attempt',u); setTimeout(function(){ document.getElementById('err').style.display='block'; document.getElementById('err').textContent='Invalid login.'; document.getElementById('btn').textContent='Continue'; document.getElementById('btn').disabled=false; }, 1800); };
+    </script>
+</body>
+</html>
