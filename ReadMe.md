@@ -368,3 +368,4 @@ Use the dashboard **Logs** tab to verify detected_site, status, and redirect_des
 ## License and Author
 
 Part of the **Intelligent Cyber Defense Framework** project. Use and modify as needed for your environment. For detailed attack coverage and test cases, see `ATTACK_DETECTION_CHECKLIST.md` in the repository.
+"# Cyber-Defense-Framework" 
